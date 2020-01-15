@@ -1,0 +1,10 @@
+{
+  "name": "VanillaTweaks",
+  "version_number": "1.2.0",
+  "website_url": "",
+  "description": "Fixes and expands upon many things in a vanilla fashion.",
+  "dependencies": [
+    "tristanmcpherson-R2API-2.3.7",
+    "bbepis-BepInExPack-3.0.0"
+  ]
+}

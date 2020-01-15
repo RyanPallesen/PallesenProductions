@@ -1,0 +1,10 @@
+{
+  "name": "ExpandedSkins",
+  "version_number": "1.1.0",
+  "website_url": "",
+  "description": "Adds 10 new unlockable skins to each character for each vanilla skin they have.",
+  "dependencies": [
+    "tristanmcpherson-R2API-2.3.7",
+    "bbepis-BepInExPack-3.0.0"
+  ]
+}
