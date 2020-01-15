@@ -72,6 +72,10 @@ namespace PallesenProductions
 
                 foreach (SurvivorDef survivorDef in SurvivorCatalog.allSurvivorDefs)
                 {
+                    //Skip 'finished'  prefabs. This is for custom survivors that do skins differently in an incompatible way to the RyanSkinAPI.
+                    if(survivorDef.bodyPrefab && survivorDef.bodyPrefab.tag == "Finish")
+                        continue;
+                    
                     AddComponents(survivorDef);
 
                     if (myConfig.Bind<bool>(new ConfigDefinition("", "DumpBoilerplates"), false).Value)
