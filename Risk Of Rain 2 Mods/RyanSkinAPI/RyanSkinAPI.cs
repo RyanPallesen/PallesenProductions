@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace PallesenProductions
 {
@@ -73,7 +74,7 @@ namespace PallesenProductions
                 foreach (SurvivorDef survivorDef in SurvivorCatalog.allSurvivorDefs)
                 {
                     //Skip 'finished'  prefabs. This is for custom survivors that do skins differently in an incompatible way to the RyanSkinAPI.
-                    if(survivorDef.bodyPrefab && survivorDef.bodyPrefab.tag == "Finish")
+                    if(survivorDef.bodyPrefab && survivorDef.bodyPrefab.CompareTag("Finish"))
                         continue;
                     
                     AddComponents(survivorDef);
@@ -110,6 +111,10 @@ namespace PallesenProductions
 
                 foreach (SurvivorDef survivorDef in SurvivorCatalog.allSurvivorDefs)
                 {
+                    //Skip finished bodies.
+                    if(survivorDef.bodyPrefab.CompareTag("Finish"))
+                        continue;
+                    
                     foreach (PendingSkin pendingSkin in pendingSkins)
                     {
                         if (survivorDef.bodyPrefab.name == pendingSkin.bodyName)
