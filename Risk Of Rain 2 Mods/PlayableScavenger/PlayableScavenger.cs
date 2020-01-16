@@ -26,38 +26,6 @@ using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-
-//no elite equip cooldown?
-
-//size tweaks
-//shrine chance returns
-//shrine restack reusable
-//no auto pickup
-//Scavenger ghost doesn't get new items
-//item drops have higher wave
-//custom equipment
-//deployables grab elite type
-//AI follow has elite type
-//Elite names for yellow / gilded
-//Expanded difficulty
-//solid arti wall
-//higher elite drop chance
-//multishop no duplicate
-//shrine chance canvas
-//void end true kill dios
-//red / green / boss triple shop in lunar
-//beads of fealty stacking
-//AI no inherit spinel debuff
-
-//buy drone with items like equipment
-//reopen void field portal with lunar
-//cleansing pool in lunar
-//multi-elite chance
-//void no advance time, or slow time
-//chest ping say open or not
-//death screen say elite type
-//change rex intro pod
-
 namespace PallesenProductions
 {
     [R2APISubmoduleDependency("SurvivorAPI")]

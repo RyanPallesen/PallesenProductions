@@ -36,9 +36,7 @@ namespace PallesenProductions
 
         private string directory;
         private List<string> floatProperties = new List<string>();
-        private List<string> intProperties = new List<string>();
         private List<string> colorProperties = new List<string>();
-        private List<string> keywordProperties = new List<string>();
 
         public struct PendingSkin
         {
@@ -49,16 +47,73 @@ namespace PallesenProductions
         }
         public void Awake()
         {
+            floatProperties.Add("_Cull");
+            floatProperties.Add("_BlueChannelBias");
+            floatProperties.Add("_BlueChannelSmoothness");
+            floatProperties.Add("_ColorsOn");
+            floatProperties.Add("_DecalLayer");
+            floatProperties.Add("_Depth");
+            floatProperties.Add("_DitherOn");
+            floatProperties.Add("_EliteBrightnessMax");
+            floatProperties.Add("_EliteBrightnessMin");
+            floatProperties.Add("_EliteIndex");
             floatProperties.Add("_EmPower");
+            floatProperties.Add("_EnableCutout");
+            floatProperties.Add("_Fade");
+            floatProperties.Add("_FadeBias");
+            floatProperties.Add("_FlowEmissionStrength");
+            floatProperties.Add("_FlowHeightBias");
+            floatProperties.Add("_FlowHeightPower");
+            floatProperties.Add("_FlowMaskStrength");
+            floatProperties.Add("_FlowNormalStrength");
+            floatProperties.Add("_FlowSpeed");
+            floatProperties.Add("_FlowTextureScaleFactor");
+            floatProperties.Add("_FlowmapOn");
+            floatProperties.Add("_ForceSpecOn");
+            floatProperties.Add("_FresnelBoost");
+            floatProperties.Add("_FresnelPower");
+            floatProperties.Add("_GreenChannelBias");
+            floatProperties.Add("_GreenChannelSmoothness");
+            floatProperties.Add("_LimbPrimeMask");
+            floatProperties.Add("_LimbRemovalOn");
+            floatProperties.Add("_NormalStrength");
             floatProperties.Add("_PrintBias");
             floatProperties.Add("_PrintBoost");
-
-            intProperties.Add("_PrintDirection");
+            floatProperties.Add("_PrintDirection");
+            floatProperties.Add("_PrintEmissionToAlbedoLerp");
+            floatProperties.Add("_PrintOn");
+            floatProperties.Add("_RampInfo");
+            floatProperties.Add("_SliceAlphaDepth");
+            floatProperties.Add("_SliceBandHeight");
+            floatProperties.Add("_SliceHeight");
+            floatProperties.Add("_Smoothness");
+            floatProperties.Add("_SpecularExponent");
+            floatProperties.Add("_SpecularStrength");
+            floatProperties.Add("_SplatmapOn");
+            floatProperties.Add("_SplatmapTileScale");
+            floatProperties.Add("_FEON");
+            floatProperties.Add("_SrcBlend");
+            floatProperties.Add("_DstBlend");
+            floatProperties.Add("_InvFade");
+            floatProperties.Add("_AlphaBias");
+            floatProperties.Add("_AlphaBoost");
+            floatProperties.Add("_Boost");
+            floatProperties.Add("_CalcTextureAlphaOn");
+            floatProperties.Add("_CloudOffsetOn");
+            floatProperties.Add("_CloudsOn");
+            floatProperties.Add("_DisableRemapOn");
+            floatProperties.Add("_ExternalAlpha");
+            floatProperties.Add("_FadeCloseDistance");
+            floatProperties.Add("_FadeCloseOn");
+            floatProperties.Add("_FresnelOn");
+            floatProperties.Add("_InternalSimpleBlendMode");
+            floatProperties.Add("_OffsetAmount");
+            floatProperties.Add("_UseUV1On");
+            floatProperties.Add("_VertexAlphaOn");
+            floatProperties.Add("_VertexColorOn");
+            floatProperties.Add("_VertexOffsetOn");
 
             colorProperties.Add("_EmColor");
-
-            keywordProperties.Add("_EMISSION");
-
 
             directory = Application.dataPath;
             directory = System.IO.Path.GetFullPath(System.IO.Path.Combine(directory, @"..\BepInEx\skins"));
@@ -134,7 +189,7 @@ namespace PallesenProductions
             skinDefInfo.gameObjectActivations = new SkinDef.GameObjectActivation[0];
             skinDefInfo.name = "SKIN_" + gameObject.name + "_DEFAULT";
 
-            
+
 
             int MeshReplacementIndex = config.Bind<int>("", "MeshReplacementIndex", 0).Value;
 
@@ -211,14 +266,7 @@ namespace PallesenProductions
                                     }
                                 }
 
-                                foreach (string value in intProperties)
-                                {
-
-                                    if (defaultMaterial.HasProperty(value))
-                                    {
-                                        defaultMaterial.SetInt(value, perMatConfig.Bind<int>("", value, defaultMaterial.GetInt(value), new ConfigDescription("Sets the value for " + value)).Value);
-                                    }
-                                }
+                                
 
                                 foreach (string value in colorProperties)
                                 {
@@ -228,7 +276,7 @@ namespace PallesenProductions
                                     }
                                 }
 
-                                foreach (string value in keywordProperties)
+                                foreach (string value in defaultMaterial.shaderKeywords)
                                 {
                                     bool isEnabled = perMatConfig.Bind<bool>("", value, defaultMaterial.IsKeywordEnabled(value), new ConfigDescription("Sets the value for " + value)).Value;
 
@@ -325,6 +373,18 @@ namespace PallesenProductions
                         Material defaultMaterial = rendererInfo.defaultMaterial;
                         if (defaultMaterial)
                         {
+                            //foreach(string value in defaultMaterial.shaderKeywords)
+                            //{
+                            //    Debug.Log(value);
+                            //}
+
+                            ////for (Int32 i = 0; i < 1000; i++)
+                            ////{
+                            ////    if (defaultMaterial.HasProperty(i))
+                            ////    {
+                            ////        defaultMaterial.SetFloatArray(i, new List<float>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+                            ////    }
+                            ////}
 
                             foreach (string textureProperty in defaultMaterial.GetTexturePropertyNames())
                             {
@@ -347,13 +407,7 @@ namespace PallesenProductions
                                 }
                             }
 
-                            foreach (string value in intProperties)
-                            {
-                                if (defaultMaterial.HasProperty(value))
-                                {
-                                    perMatConfig.Bind<int>("", value, defaultMaterial.GetInt(value), new ConfigDescription("Sets the value for " + value));
-                                }
-                            }
+                            
 
                             foreach (string value in colorProperties)
                             {
@@ -363,12 +417,9 @@ namespace PallesenProductions
                                 }
                             }
 
-                            foreach (string value in keywordProperties)
+                            foreach (string value in defaultMaterial.shaderKeywords)
                             {
-
-
                                 perMatConfig.Bind<bool>("", value, defaultMaterial.IsKeywordEnabled(value), new ConfigDescription("Sets the value for " + value));
-
                             }
 
                         }
@@ -450,7 +501,7 @@ namespace PallesenProductions
             {
                 skinDefInfo.rendererInfos = model.baseRendererInfos;
 
-                for(int i = 0; i < skinDefInfo.rendererInfos.Length; i++)
+                for (int i = 0; i < skinDefInfo.rendererInfos.Length; i++)
                 {
                     skinDefInfo.rendererInfos[i].defaultMaterial.enableInstancing = true;
                     skinDefInfo.rendererInfos[i].renderer.material.enableInstancing = true;
@@ -468,7 +519,7 @@ namespace PallesenProductions
             }
             else
             {
-                 base.Logger.LogError("Unable to create new skin for " + def);
+                base.Logger.LogError("Unable to create new skin for " + def);
             }
 
             return component;
