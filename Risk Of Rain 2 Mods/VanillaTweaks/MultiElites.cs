@@ -57,7 +57,7 @@ namespace VanillaTweaks
                     currentEliteTypes += 1;
                 }
             }
-            if (currentEliteTypes > 1)
+            if (currentEliteTypes > 1 || (body.isChampion && !body.isBoss))
             {
 
                 foreach (CombatDirector.EliteTierDef tierDef in eliteDefs)
@@ -86,6 +86,7 @@ namespace VanillaTweaks
                                     body.AddBuff(buffDef.buffIndex);
                                     self.monsterCredit -= card.cost * tierDef.costMultiplier * currentEliteTypes;
                                     credit -= card.cost * tierDef.costMultiplier * currentEliteTypes;
+
                                     currentEliteTypes++;
 
                                     float num3 = tierDef.healthBoostCoefficient;
@@ -98,6 +99,11 @@ namespace VanillaTweaks
                                     body.inventory.GiveItem(ItemIndex.BoostHp, Mathf.RoundToInt((num3 - 1f) * 10f));
                                     body.inventory.GiveItem(ItemIndex.BoostDamage, Mathf.RoundToInt((damageBoostCoefficient - 1f) * 10f));
 
+                                    if(body.isChampion)
+                                    {
+                                        body.inventory.GiveItem(ItemIndex.BoostHp, Mathf.RoundToInt((num3 - 1f) * 10f));
+                                        body.inventory.GiveItem(ItemIndex.BoostDamage, Mathf.RoundToInt((damageBoostCoefficient - 1f) * 10f));
+                                    }
                                     EliteDef eliteDef = EliteCatalog.GetEliteDef(eliteIndex);
                                     EquipmentIndex equipmentIndex = (eliteDef != null) ? eliteDef.eliteEquipmentIndex : EquipmentIndex.None;
                                     if (equipmentIndex != EquipmentIndex.None)
