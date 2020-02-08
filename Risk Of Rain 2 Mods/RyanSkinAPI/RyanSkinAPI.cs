@@ -6,6 +6,7 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
@@ -129,9 +130,11 @@ namespace PallesenProductions
                 foreach (SurvivorDef survivorDef in SurvivorCatalog.allSurvivorDefs)
                 {
                     //Skip 'finished'  prefabs. This is for custom survivors that do skins differently in an incompatible way to the RyanSkinAPI.
-                    if(survivorDef.bodyPrefab && survivorDef.bodyPrefab.CompareTag("Finish"))
+                    if (survivorDef.bodyPrefab && survivorDef.bodyPrefab.CompareTag("Finish"))
+                    {
                         continue;
-                    
+                    }
+
                     AddComponents(survivorDef);
 
                     if (myConfig.Bind<bool>(new ConfigDefinition("", "DumpBoilerplates"), false).Value)
@@ -167,9 +170,11 @@ namespace PallesenProductions
                 foreach (SurvivorDef survivorDef in SurvivorCatalog.allSurvivorDefs)
                 {
                     //Skip finished bodies.
-                    if(survivorDef.bodyPrefab.CompareTag("Finish"))
+                    if (survivorDef.bodyPrefab.CompareTag("Finish"))
+                    {
                         continue;
-                    
+                    }
+
                     foreach (PendingSkin pendingSkin in pendingSkins)
                     {
                         if (survivorDef.bodyPrefab.name == pendingSkin.bodyName)
@@ -188,15 +193,15 @@ namespace PallesenProductions
             GameObject gameObject = def.bodyPrefab;
 
             LoadoutAPI.SkinDefInfo skinDefInfo = new LoadoutAPI.SkinDefInfo();
-            skinDefInfo.baseSkins = new SkinDef[0];
-            skinDefInfo.icon = LoadoutAPI.CreateSkinIcon(config.Bind<Color>("", "IconColorTop", Color.magenta).Value, config.Bind<Color>("", "IconColorRight", Color.black).Value, config.Bind<Color>("", "IconColorBottom", Color.magenta).Value, config.Bind<Color>("", "IconColorLeft", Color.black).Value);
-            skinDefInfo.nameToken = config.Bind<string>("", "SkinName", "DefaultName").Value;
-            skinDefInfo.unlockableName = config.Bind<string>("", "UnlockableName", "").Value;
-            skinDefInfo.rootObject = def.bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
-            skinDefInfo.rendererInfos = new CharacterModel.RendererInfo[0];
-            skinDefInfo.meshReplacements = new SkinDef.MeshReplacement[0];
-            skinDefInfo.gameObjectActivations = new SkinDef.GameObjectActivation[0];
-            skinDefInfo.name = "SKIN_" + gameObject.name + "_DEFAULT";
+            skinDefInfo.BaseSkins = new SkinDef[0];
+            skinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(config.Bind<Color>("", "IconColorTop", Color.magenta).Value, config.Bind<Color>("", "IconColorRight", Color.black).Value, config.Bind<Color>("", "IconColorBottom", Color.magenta).Value, config.Bind<Color>("", "IconColorLeft", Color.black).Value);
+            skinDefInfo.NameToken = config.Bind<string>("", "SkinName", "DefaultName").Value;
+            skinDefInfo.UnlockableName = config.Bind<string>("", "UnlockableName", "").Value;
+            skinDefInfo.RootObject = def.bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
+            skinDefInfo.RendererInfos = new CharacterModel.RendererInfo[0];
+            skinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[0];
+            skinDefInfo.GameObjectActivations = new SkinDef.GameObjectActivation[0];
+            skinDefInfo.Name = "SKIN_" + gameObject.name + "_DEFAULT";
 
 
 
@@ -204,50 +209,37 @@ namespace PallesenProductions
 
             if (MeshReplacementIndex != -1)
             {
-                skinDefInfo.meshReplacements = gameObject.GetComponent<ModelLocator>().modelTransform.GetComponent<ModelSkinController>().skins[MeshReplacementIndex].meshReplacements;
-                skinDefInfo.rendererInfos = gameObject.GetComponent<ModelLocator>().modelTransform.GetComponent<ModelSkinController>().skins[MeshReplacementIndex].rendererInfos;
+                skinDefInfo.MeshReplacements = gameObject.GetComponent<ModelLocator>().modelTransform.GetComponent<ModelSkinController>().skins[MeshReplacementIndex].meshReplacements;
+                skinDefInfo.RendererInfos = gameObject.GetComponent<ModelLocator>().modelTransform.GetComponent<ModelSkinController>().skins[MeshReplacementIndex].rendererInfos;
             }
 
-            CharacterModel.RendererInfo[] rendererInfos = skinDefInfo.rendererInfos;
+            CharacterModel.RendererInfo[] rendererInfos = skinDefInfo.RendererInfos;
             CharacterModel.RendererInfo[] array = new CharacterModel.RendererInfo[rendererInfos.Length];
             rendererInfos.CopyTo(array, 0);
 
-            foreach (string FilePath in Directory.EnumerateFiles(SkinFolder))
-            {
-                //if (FilePath.EndsWith(".obj"))
-                //{
-                //    Mesh holderMesh = new Mesh();
-                //    ObjImporter newMesh = new ObjImporter();
-                //    holderMesh = newMesh.ImportFile(FilePath);
 
-                //    Array.Resize(ref skinDefInfo.meshReplacements, skinDefInfo.meshReplacements.Length + 1);
-                //    skinDefInfo.meshReplacements[skinDefInfo.meshReplacements.Length - 1].mesh = holderMesh;
-                //}
-            }
 
             foreach (string MaterialFolder in Directory.EnumerateDirectories(SkinFolder))
             {
 
                 string[] MaterialIndexVs = MaterialFolder.Split(new string[] { @"\" }, StringSplitOptions.None);
-                string MaterialIndex = MaterialIndexVs[MaterialIndexVs.Length - 1];
+                string RendererName = MaterialIndexVs[MaterialIndexVs.Length - 1];
 
-                int index = int.Parse(MaterialIndex);
+                int index = Array.IndexOf(array, array.FirstOrDefault(x => x.renderer.name == RendererName));
 
                 Material defaultMaterial = array[index].defaultMaterial;
-
                 if (defaultMaterial)
                 {
                     defaultMaterial = UnityEngine.Object.Instantiate<Material>(defaultMaterial);
 
                     foreach (string FilePath in Directory.EnumerateFiles(MaterialFolder))
                     {
-                        if (FilePath.EndsWith(".png"))
+                        if (FilePath.EndsWith(".PNG") || FilePath.EndsWith(".png"))
                         {
                             string[] FilePathVs = FilePath.Split(new string[] { @"\" }, StringSplitOptions.None);
-                            string FileName = FilePathVs[FilePathVs.Length - 1].Replace(".png", "");
+                            string FileName = FilePathVs[FilePathVs.Length - 1].Replace(".PNG", "");
 
-                            Texture2D savedTex = new Texture2D(1, 1);
-                            //savedTex.filterMode = FilterMode.Point;
+                            Texture2D savedTex = new Texture2D(1, 1, TextureFormat.RGBAFloat, false, true);
                             ImageConversion.LoadImage(savedTex, System.IO.File.ReadAllBytes(FilePath));
 
                             savedTex.Apply();
@@ -275,7 +267,7 @@ namespace PallesenProductions
                                     }
                                 }
 
-                                
+
 
                                 foreach (string value in colorProperties)
                                 {
@@ -302,6 +294,32 @@ namespace PallesenProductions
                             }
 
                         }
+                        else if (FilePath.EndsWith(".obj"))
+                        {
+
+                            
+
+                            Mesh holderMesh = new Mesh();
+                            ObjImporter newMesh = new ObjImporter();
+                            holderMesh = newMesh.ImportFile(FilePath);
+
+                            if (array[index].renderer.gameObject.GetComponent<MeshFilter>())
+                            {
+                                Array.Resize(ref skinDefInfo.MeshReplacements, skinDefInfo.MeshReplacements.Length + 1);
+                                skinDefInfo.MeshReplacements[skinDefInfo.MeshReplacements.Length - 1].mesh = holderMesh;
+                                skinDefInfo.MeshReplacements[skinDefInfo.MeshReplacements.Length - 1].renderer = array[index].renderer;
+                            }
+
+                            if ((array[index].renderer as SkinnedMeshRenderer))
+                            {
+                                Array.Resize(ref skinDefInfo.MeshReplacements, skinDefInfo.MeshReplacements.Length + 1);
+                                skinDefInfo.MeshReplacements[skinDefInfo.MeshReplacements.Length - 1].mesh = holderMesh;
+                                skinDefInfo.MeshReplacements[skinDefInfo.MeshReplacements.Length - 1].renderer = array[index].renderer;
+
+                            }
+
+
+                        }
                         else
                         {
                             base.Logger.LogError("Unsupported file found in material folder: " + FilePath);
@@ -310,16 +328,13 @@ namespace PallesenProductions
 
 
                     array[index].defaultMaterial = defaultMaterial;
-                    //skinDefInfo.rendererInfos[index].renderer.material = defaultMaterial;
-                    //skinDefInfo.rendererInfos[index].renderer.sharedMaterial = defaultMaterial;
-                    //skinDefInfo.rendererInfos[index].renderer.UpdateGIMaterials();
 
                 }
             }
 
-            base.Logger.LogInfo("Added new skin to " + def.bodyPrefab.name + " with name " + skinDefInfo.nameToken);
+            base.Logger.LogInfo("Added new skin to " + def.bodyPrefab.name + " with name " + skinDefInfo.NameToken);
 
-            skinDefInfo.rendererInfos = array;
+            skinDefInfo.RendererInfos = array;
             LoadoutAPI.AddSkinToCharacter(def.bodyPrefab, skinDefInfo);
 
             SkinDef[] skins = def.bodyPrefab.GetComponent<ModelLocator>().modelTransform.GetComponent<ModelSkinController>().skins;
@@ -358,53 +373,54 @@ namespace PallesenProductions
                     perSkinConfig.Bind<Color>("", "IconColorBottom", Color.magenta, new ConfigDescription("The icon colours"));
                     perSkinConfig.Bind<Color>("", "IconColorLeft", Color.black, new ConfigDescription("The icon colours"));
 
-                    //foreach (SkinDef.MeshReplacement meshReplacement in currentSkin.meshReplacements)
-                    //{
-                    //    if (meshReplacement.mesh)
-                    //    {
-                    //        string objFile = MeshToString(meshReplacement.mesh);
-                    //        FileStream stream = File.Create(currentDirectory + "/" + meshReplacement.mesh.name + ".obj");
-                    //        byte[] bytes = Encoding.ASCII.GetBytes(objFile);
-                    //        stream.Write(bytes, 0, bytes.Length);
-                    //        stream.Dispose();
-                    //    }
-                    //}
 
-                    int currentRenderer = 0;
+                    //UnityFBXExporter.FBXExporter.ExportGameObjToFBX(gameObject, currentDirectory + @"\MeshReplacement.fbx");
+
+
                     foreach (CharacterModel.RendererInfo rendererInfo in currentSkin.rendererInfos)
                     {
-                        string filePath = currentDirectory + @"\" + currentRenderer;
+                        string filePath = currentDirectory + @"\" + rendererInfo.renderer.name;
                         if (!Directory.Exists(filePath))
                         {
                             Directory.CreateDirectory(filePath);
                         }
 
+                        Mesh mesh = null;
+
+                        if (rendererInfo.renderer.gameObject.GetComponent<MeshFilter>())
+                        {
+                            mesh = rendererInfo.renderer.gameObject.GetComponent<MeshFilter>().mesh;
+                        }
+
+                        if ((rendererInfo.renderer as SkinnedMeshRenderer))
+                        {
+                            mesh = (rendererInfo.renderer as SkinnedMeshRenderer).sharedMesh;
+                        }
+
+                        if (mesh)
+                        {
+
+                            string objFile = MeshToString(mesh);
+                            FileStream stream = File.Create(filePath + @"\" + mesh.name + ".obj");
+                            byte[] bytes = Encoding.ASCII.GetBytes(objFile);
+                            stream.Write(bytes, 0, bytes.Length);
+                            stream.Dispose();
+                        }
+
                         Material defaultMaterial = rendererInfo.defaultMaterial;
                         if (defaultMaterial)
                         {
-                            //foreach(string value in defaultMaterial.shaderKeywords)
-                            //{
-                            //    Debug.Log(value);
-                            //}
 
-                            ////for (Int32 i = 0; i < 1000; i++)
-                            ////{
-                            ////    if (defaultMaterial.HasProperty(i))
-                            ////    {
-                            ////        defaultMaterial.SetFloatArray(i, new List<float>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-                            ////    }
-                            ////}
 
                             foreach (string textureProperty in defaultMaterial.GetTexturePropertyNames())
                             {
                                 Texture2D defaultTexture = (Texture2D)defaultMaterial.GetTexture(textureProperty);
-
                                 Texture2D readableTexture = GetReadableTextureCopy(defaultTexture);
 
-                                System.IO.File.WriteAllBytes(filePath + @"\" + textureProperty + ".png", ImageConversion.EncodeToPNG(readableTexture));
+                                System.IO.File.WriteAllBytes(filePath + @"\" + textureProperty + ".PNG", ImageConversion.EncodeToPNG(readableTexture));
                             }
 
-                            BepInEx.Configuration.ConfigFile perMatConfig = new ConfigFile(@"BepInEx\skins\Defaults\" + currentSkin.name + @"\" + currentRenderer + @"\Material.cfg", true);
+                            BepInEx.Configuration.ConfigFile perMatConfig = new ConfigFile(@"BepInEx\skins\Defaults\" + currentSkin.name + @"\" + rendererInfo.renderer.name + @"\Material.cfg", true);
 
 
                             foreach (string value in floatProperties)
@@ -416,7 +432,7 @@ namespace PallesenProductions
                                 }
                             }
 
-                            
+
 
                             foreach (string value in colorProperties)
                             {
@@ -433,7 +449,6 @@ namespace PallesenProductions
 
                         }
 
-                        currentRenderer++;
                     }
 
                     skinIndex++;
@@ -450,10 +465,10 @@ namespace PallesenProductions
             if (baseTex)
             {
                 RenderTexture active = RenderTexture.active;
-                RenderTexture temporary = RenderTexture.GetTemporary(baseTex.width, baseTex.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+                RenderTexture temporary = RenderTexture.GetTemporary(baseTex.width, baseTex.height, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);
                 Graphics.Blit(baseTex, temporary);
                 RenderTexture.active = temporary;
-                Texture2D texture2D = new Texture2D(baseTex.width, baseTex.height, TextureFormat.RGBA32, false);
+                Texture2D texture2D = new Texture2D(baseTex.width, baseTex.height, TextureFormat.RGBAFloat, false);
                 texture2D.ReadPixels(new Rect(0f, 0f, (float)temporary.width, (float)temporary.height), 0, 0);
                 texture2D.Apply();
                 RenderTexture.active = active;
@@ -495,26 +510,26 @@ namespace PallesenProductions
             CharacterModel model = def.bodyPrefab.GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>();
 
             LoadoutAPI.SkinDefInfo skinDefInfo = default(LoadoutAPI.SkinDefInfo);
-            skinDefInfo.baseSkins = new SkinDef[0];
-            skinDefInfo.icon = LoadoutAPI.CreateSkinIcon(Color.black, Color.white, Color.black, Color.white);
-            skinDefInfo.nameToken = "Default";
-            skinDefInfo.unlockableName = "";
-            skinDefInfo.rootObject = def.bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
-            skinDefInfo.rendererInfos = model.baseRendererInfos;
-            skinDefInfo.meshReplacements = new SkinDef.MeshReplacement[0];
-            skinDefInfo.gameObjectActivations = new SkinDef.GameObjectActivation[0];// { new SkinDef.GameObjectActivation() { gameObject = def.bodyPrefab, shouldActivate = true } };
-            skinDefInfo.name = "SKIN_" + def.bodyPrefab.name + "_DEFAULT";
+            skinDefInfo.BaseSkins = new SkinDef[0];
+            skinDefInfo.Icon = LoadoutAPI.CreateSkinIcon(Color.black, Color.white, Color.black, Color.white);
+            skinDefInfo.NameToken = "Default";
+            skinDefInfo.UnlockableName = "";
+            skinDefInfo.RootObject = def.bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
+            skinDefInfo.RendererInfos = model.baseRendererInfos;
+            skinDefInfo.MeshReplacements = new SkinDef.MeshReplacement[0];
+            skinDefInfo.GameObjectActivations = new SkinDef.GameObjectActivation[1] { new SkinDef.GameObjectActivation() { gameObject = def.bodyPrefab, shouldActivate = true } };
+            skinDefInfo.Name = "SKIN_" + def.bodyPrefab.name + "_DEFAULT";
 
 
             if (model)
             {
-                skinDefInfo.rendererInfos = model.baseRendererInfos;
+                skinDefInfo.RendererInfos = model.baseRendererInfos;
 
-                for (int i = 0; i < skinDefInfo.rendererInfos.Length; i++)
+                for (int i = 0; i < skinDefInfo.RendererInfos.Length; i++)
                 {
-                    skinDefInfo.rendererInfos[i].defaultMaterial.enableInstancing = true;
-                    skinDefInfo.rendererInfos[i].renderer.material.enableInstancing = true;
-                    skinDefInfo.rendererInfos[i].renderer.sharedMaterial.enableInstancing = true;
+                    skinDefInfo.RendererInfos[i].defaultMaterial.enableInstancing = true;
+                    skinDefInfo.RendererInfos[i].renderer.material.enableInstancing = true;
+                    skinDefInfo.RendererInfos[i].renderer.sharedMaterial.enableInstancing = true;
                 }
 
                 SkinDef skinDef3 = LoadoutAPI.CreateNewSkinDef(skinDefInfo);
@@ -609,12 +624,18 @@ public class ObjImporter
             newVerts[i] = newMesh.vertices[(int)v.x - 1];
             if (v.y >= 1)
             {
-                newUVs[i] = newMesh.uv[(int)v.y - 1];
+                if (((int)v.y - 1) >= 0 && ((int)v.y - 1) < newMesh.uv.Length)
+                {
+                    newUVs[i] = newMesh.uv[(int)v.y - 1];
+                }
             }
 
             if (v.z >= 1)
             {
-                newNormals[i] = newMesh.normals[(int)v.z - 1];
+                if (((int)v.z - 1) >= 0 && ((int)v.z - 1) < newMesh.normals.Length)
+                {
+                    newNormals[i] = newMesh.normals[(int)v.z - 1];
+                }
             }
 
             i++;

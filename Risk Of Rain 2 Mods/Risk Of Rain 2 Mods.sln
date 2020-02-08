@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RyanSkinAPI", "RyanSkinAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaTweaks", "VanillaTweaks\VanillaTweaks.csproj", "{FEC8D73C-E5C1-443E-84B0-B42C6E5250A8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Waveify", "Waveify\Waveify.csproj", "{CFAF644F-7F82-4A9B-B55D-6D695BA4F8AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FEC8D73C-E5C1-443E-84B0-B42C6E5250A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC8D73C-E5C1-443E-84B0-B42C6E5250A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC8D73C-E5C1-443E-84B0-B42C6E5250A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFAF644F-7F82-4A9B-B55D-6D695BA4F8AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFAF644F-7F82-4A9B-B55D-6D695BA4F8AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFAF644F-7F82-4A9B-B55D-6D695BA4F8AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFAF644F-7F82-4A9B-B55D-6D695BA4F8AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
