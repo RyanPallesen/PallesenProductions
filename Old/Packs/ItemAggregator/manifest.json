@@ -1,0 +1,10 @@
+{
+  "name": "ItemAggregator",
+  "version_number": "1.0.0",
+  "website_url": "",
+  "description": "Allows enemies to aggregate items, like in the void fields.",
+  "dependencies": [
+    "tristanmcpherson-R2API-2.3.7",
+    "bbepis-BepInExPack-3.0.0"
+  ]
+}

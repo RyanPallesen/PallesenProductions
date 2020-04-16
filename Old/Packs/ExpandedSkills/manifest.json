@@ -1,0 +1,10 @@
+{
+  "name": "ExpandedSkills",
+  "version_number": "1.2.0",
+  "website_url": "",
+  "description": "Adds multiple new mostly-balanced skills. including shadow clones",
+  "dependencies": [
+    "tristanmcpherson-R2API-2.3.17",
+    "bbepis-BepInExPack-3.0.0"
+  ]
+}

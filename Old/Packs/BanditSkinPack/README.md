@@ -1,0 +1,1 @@
+﻿#Assorted bandit skins for use with RyanSkinAPI and any bandit mod

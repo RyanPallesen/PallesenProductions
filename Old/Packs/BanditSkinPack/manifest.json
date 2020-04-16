@@ -1,0 +1,10 @@
+{
+  "name": "BanditSkins",
+  "version_number": "1.0.0",
+  "website_url": "",
+  "description": "Some bandit skins",
+  "dependencies": [
+    "RyanPallesen-RyanSkinAPI-1.0.0",
+    "bbepis-BepInExPack-3.0.0"
+  ]
+}
