@@ -68,9 +68,6 @@ namespace name
 
             skillLocator.SetFieldValue<GenericSkill[]>("allSkills", new GenericSkill[0]);
 
-
-
-
             skillSetup();
 
             BodyCatalog.getAdditionalEntries += delegate (List<GameObject> list)
@@ -79,12 +76,15 @@ namespace name
             };
 
             CharacterBody component = myCharacter.GetComponent<CharacterBody>();
-            component.baseDamage = 5f;
-            component.levelDamage = 0.5f;
+
+            component.GetComponent<ModelLocator>().modelBaseTransform.GetComponentInChildren<SkinnedMeshRenderer>().material.DisableKeyword("EMISSION");
+
+            component.baseDamage = 6f;
+            component.levelDamage = 1.25f;
             component.baseCrit = 1f;
             component.levelCrit = 0;
-            component.baseMaxHealth = 120f;
-            component.levelMaxHealth = 10f;
+            component.baseMaxHealth = 90;
+            component.levelMaxHealth = 20f;
             component.baseArmor = 5f;
             component.baseRegen = 2f;
             component.levelRegen = 0.1f;
@@ -157,7 +157,7 @@ namespace name
                 mySkillDef.requiredStock = 1;
                 mySkillDef.shootDelay = 1f;
                 mySkillDef.stockToConsume = 1;
-                //mySkillDef.icon = Resources.Load<Sprite>()
+                mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/commandobody").GetComponent<SkillLocator>().special.skillFamily.variants[0].skillDef.icon;
                 mySkillDef.skillDescriptionToken = "Spray bullets in the direction of enemies";
                 mySkillDef.skillName = "PP_PLAYABLETC_PRIMARY";
                 mySkillDef.skillNameToken = "Supressive Fire";
@@ -210,7 +210,7 @@ namespace name
                 mySkillDef.requiredStock = 1;
                 mySkillDef.shootDelay = 0.25f;
                 mySkillDef.stockToConsume = 1;
-                //mySkillDef.icon = Resources.Load<Sprite>()
+                mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/engibody").GetComponent<SkillLocator>().primary.skillFamily.variants[0].skillDef.icon;
                 mySkillDef.skillDescriptionToken = "Fire two large rockets";
                 mySkillDef.skillName = "PP_PLAYABLETC_SPECIAL";
                 mySkillDef.skillNameToken = "Explosive Ordenance";
@@ -264,7 +264,7 @@ namespace name
                 mySkillDef.requiredStock = 1;
                 mySkillDef.shootDelay = 1f;
                 mySkillDef.stockToConsume = 1;
-                //mySkillDef.icon = Resources.Load<Sprite>()
+                mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/toolbotbody").GetComponent<SkillLocator>().utility.skillFamily.variants[0].skillDef.icon;
                 mySkillDef.skillDescriptionToken = "Gain a boost of movement";
                 mySkillDef.skillName = "PP_PLAYABLETC_Utility";
                 mySkillDef.skillNameToken = "Movement Boost";
@@ -301,7 +301,7 @@ namespace name
                 mySkillDef.requiredStock = 1;
                 mySkillDef.shootDelay = 0f;
                 mySkillDef.stockToConsume = 0;
-                //mySkillDef.icon = Resources.Load<Sprite>()
+                mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/engibody").GetComponent<SkillLocator>().utility.skillFamily.variants[1].skillDef.icon;
                 mySkillDef.skillDescriptionToken = "Enter target-painting mode.";
                 mySkillDef.skillName = "PP_PLAYABLETC_PAINT";
                 mySkillDef.skillNameToken = "Target Acquisition";
@@ -339,7 +339,7 @@ namespace name
                 mySkillDef.requiredStock = 1;
                 mySkillDef.shootDelay = 0f;
                 mySkillDef.stockToConsume = 1;
-                //mySkillDef.icon = Resources.Load<Sprite>()
+                mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/huntressbody").GetComponent<SkillLocator>().utility.skillFamily.variants[1].skillDef.icon;
                 mySkillDef.skillDescriptionToken = "Command your drones to target an enemy or ally that you have pinged for 5 seconds";
                 mySkillDef.skillName = "PP_PLAYABLETC_ALLYPING";
                 mySkillDef.skillNameToken = "Additional Directives";
@@ -366,7 +366,7 @@ namespace name
 
                 skillLocator.special = myCharacter.AddComponent<GenericSkill>();
                 SkillFamily newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-                newFamily.variants = new SkillFamily.Variant[2];
+                newFamily.variants = new SkillFamily.Variant[1];
 
                 LoadoutAPI.AddSkillFamily(newFamily);
                 skillLocator.special.SetFieldValue("_skillFamily", newFamily);
@@ -391,7 +391,7 @@ namespace name
                 mySkillDef.requiredStock = 1;
                 mySkillDef.shootDelay = 0f;
                 mySkillDef.stockToConsume = 1;
-                //mySkillDef.icon = Resources.Load<Sprite>()
+                mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/drone1body").GetComponent<SkillLocator>().primary.skillFamily.variants[0].skillDef.icon;
                 mySkillDef.skillDescriptionToken = "Summon two basic gunner drones that inherit all your items";
                 mySkillDef.skillName = "PP_PLAYABLETC_SPECIAL_BASIC";
                 mySkillDef.skillNameToken = "Calling Backup";
@@ -410,51 +410,50 @@ namespace name
                         viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
                     };
             }
-            LoadoutAPI.AddSkill(typeof(DroneSummonHealing));
-            {
-                SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
-                mySkillDef.activationState = new SerializableEntityStateType(typeof(DroneSummonHealing));
-                mySkillDef.activationStateMachineName = "WeaponGun";
-                mySkillDef.baseMaxStock = 1;
-                mySkillDef.baseRechargeInterval = 16f;
-                mySkillDef.beginSkillCooldownOnSkillEnd = false;
-                mySkillDef.canceledFromSprinting = false;
-                mySkillDef.fullRestockOnAssign = false;
-                mySkillDef.interruptPriority = InterruptPriority.PrioritySkill;
-                mySkillDef.isBullets = true;
-                mySkillDef.isCombatSkill = false;
-                mySkillDef.mustKeyPress = false;
-                mySkillDef.noSprint = true;
-                mySkillDef.rechargeStock = 1;
-                mySkillDef.requiredStock = 1;
-                mySkillDef.shootDelay = 3f;
-                mySkillDef.stockToConsume = 1;
-                //mySkillDef.icon = Resources.Load<Sprite>()
-                mySkillDef.skillDescriptionToken = "Summon two healing drones that inherit all your items";
-                mySkillDef.skillName = "PP_PLAYABLETC_SPECIAL_HEALING";
-                mySkillDef.skillNameToken = "Emergency Services";
 
-                LoadoutAPI.AddSkillDef(mySkillDef);
+            //LoadoutAPI.AddSkill(typeof(DroneSummonHealing));
+            //{
+            //    SkillDef mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
+            //    mySkillDef.activationState = new SerializableEntityStateType(typeof(DroneSummonHealing));
+            //    mySkillDef.activationStateMachineName = "WeaponGun";
+            //    mySkillDef.baseMaxStock = 1;
+            //    mySkillDef.baseRechargeInterval = 16f;
+            //    mySkillDef.beginSkillCooldownOnSkillEnd = false;
+            //    mySkillDef.canceledFromSprinting = false;
+            //    mySkillDef.fullRestockOnAssign = false;
+            //    mySkillDef.interruptPriority = InterruptPriority.PrioritySkill;
+            //    mySkillDef.isBullets = true;
+            //    mySkillDef.isCombatSkill = false;
+            //    mySkillDef.mustKeyPress = false;
+            //    mySkillDef.noSprint = true;
+            //    mySkillDef.rechargeStock = 1;
+            //    mySkillDef.requiredStock = 1;
+            //    mySkillDef.shootDelay = 3f;
+            //    mySkillDef.stockToConsume = 1;
+            //    mySkillDef.icon = Resources.Load<GameObject>("Prefabs/CharacterBodies/drone2body").GetComponent<SkillLocator>().primary.skillFamily.variants[0].skillDef.icon;
+            //    mySkillDef.skillDescriptionToken = "Summon two healing drones that inherit all your items";
+            //    mySkillDef.skillName = "PP_PLAYABLETC_SPECIAL_HEALING";
+            //    mySkillDef.skillNameToken = "Emergency Services";
 
-                GameObject gameObject = myCharacter;
-                SkillLocator component = gameObject.GetComponent<SkillLocator>();
-                SkillFamily skillFamily = component.special.skillFamily;
+            //    LoadoutAPI.AddSkillDef(mySkillDef);
 
-                skillFamily.variants[1] =
-                    new SkillFamily.Variant
-                    {
-                        skillDef = mySkillDef,
-                        unlockableName = "",
-                        viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-                    };
-            }
+            //    GameObject gameObject = myCharacter;
+            //    SkillLocator component = gameObject.GetComponent<SkillLocator>();
+            //    SkillFamily skillFamily = component.special.skillFamily;
+
+            //    skillFamily.variants[1] =
+            //        new SkillFamily.Variant
+            //        {
+            //            skillDef = mySkillDef,
+            //            unlockableName = "",
+            //            viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
+            //        };
+            //}
 
 
         }
 
     }
-
-
 
     public class AllyPing : BaseState
     {
