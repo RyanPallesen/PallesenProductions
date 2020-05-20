@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayablePrototype", "RoR2Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VanillaTweaks", "VanillaTweaks\VanillaTweaks.csproj", "{AE46BC4E-5E05-48E0-BAA1-21782D4F9F25}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RyanSkinAPI", "RyanSkinAPI\RyanSkinAPI.csproj", "{0A075330-F9B4-4FCC-821A-0B1A0D8EF7B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AE46BC4E-5E05-48E0-BAA1-21782D4F9F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE46BC4E-5E05-48E0-BAA1-21782D4F9F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE46BC4E-5E05-48E0-BAA1-21782D4F9F25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A075330-F9B4-4FCC-821A-0B1A0D8EF7B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A075330-F9B4-4FCC-821A-0B1A0D8EF7B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A075330-F9B4-4FCC-821A-0B1A0D8EF7B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A075330-F9B4-4FCC-821A-0B1A0D8EF7B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
