@@ -1,0 +1,11 @@
+{
+  "name": "FloodWarning",
+  "version_number": "4.0.1",
+  "website_url": "https://discord.gg/TkKUkyq",
+  "description": "A WIP Content modpack. Contains 3 Elites, 17 Skills and 4 Artifacts",
+  "dependencies": [
+    "tristanmcpherson-R2API-2.5.7",
+    "bbepis-BepInExPack-5.3.1",
+    "Jarlyk-EliteSpawningOverhaul-1.1.0"
+  ]
+}

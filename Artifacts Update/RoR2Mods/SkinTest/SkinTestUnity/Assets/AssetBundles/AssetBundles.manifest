@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 182459695
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: skintest
+      Dependencies: {}

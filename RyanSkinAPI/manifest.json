@@ -1,0 +1,10 @@
+{
+  "name": "RyanSkinAPI",
+  "version_number": "3.1.1",
+  "website_url": "https://discord.gg/fy7JGze",
+  "description": "An API that allows extremely easy skin loading from PNG files",
+  "dependencies": [
+    "tristanmcpherson-R2API-2.3.17",
+    "bbepis-BepInExPack-3.1.0"
+  ]
+}
